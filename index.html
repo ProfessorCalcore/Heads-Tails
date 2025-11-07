@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <meta charset="UTF-8">
+  <title>Coin Flip Game</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f0f; text-align: center; padding: 20px; }
+    button { padding: 10px 20px; font-size: 16px; margin: 10px; cursor: pointer; }
+    #output { margin-top: 20px; min-height: 200px; }
+    .pounds { font-size: 24px; margin: 10px 0; }
+    .coins { font-size: 20px; line-height: 1.2; word-wrap: break-word; }
+  </style>
+</head>
+<body>
+  <h1>🪙 Coin Flip Game 🪙</h1>
+  <div>
+    <button id="headsBtn">Flip Heads</button>
+    <button id="tailsBtn">Flip Tails</button>
+    <button id="resetBtn">Reset Game</button>
+  </div>
+  <div class="pounds" id="poundsDisplay">£20</div>
+  <div class="coins" id="coinDisplay">🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙</div>
+  <div id="output"></div>
+
+<script>
+let pounds = 20;
+let upgrade1 = false;
+
+const output = document.getElementById("output");
+const poundsDisplay = document.getElementById("poundsDisplay");
+const coinDisplay = document.getElementById("coinDisplay");
+
+function updateDisplay() {
+  poundsDisplay.textContent = `£${pounds}`;
+  coinDisplay.textContent = "🪙".repeat(pounds);
+}
+
+function flip(choice) {
+  const heads = Math.random() < 0.5;
+  output.innerHTML = "";
+
+  if(choice === "H") {
+    if(heads) {
+      pounds += 1;
+      output.innerHTML = "👑 Heads! 🤑 £1 Added!";
+    } else {
+      pounds -= 1;
+      output.innerHTML = "〽️ Tails... You lose 😈";
+    }
+  } else if(choice === "T") {
+    if(heads) {
+      pounds -= 1;
+      output.innerHTML = "👑 Heads... You lose 😈";
+    } else {
+      pounds += 1;
+      output.innerHTML = "〽️ Tails! 🤑 £1 Added!";
+    }
+  }
+
+  // Extra pound for luck
+  if(pounds >= 20 && !upgrade1) {
+    pounds += 1;
+    output.innerHTML += "<br>☘ You get an extra pound for luck ☘";
+  }
+
+  // Upgrade offer
+  if(pounds >= 20 && !upgrade1) {
+    const buyUpgrade = confirm("£20! Wanna buy an upgrade for £10?");
+    if(buyUpgrade) {
+      pounds -= 10;
+      upgrade1 = true;
+      output.innerHTML += "<br>🎉 Upgrade purchased! Your luck is improving! 🎉";
+    }
+  }
+
+  // Game over
+  if(pounds <= 0) {
+    pounds = 0;
+    updateDisplay();
+    alert("You are out of pounds! Game over 😢");
+    return;
+  }
+
+  updateDisplay();
+}
+
+document.getElementById("headsBtn").addEventListener("click", () => flip("H"));
+document.getElementById("tailsBtn").addEventListener("click", () => flip("T"));
+document.getElementById("resetBtn").addEventListener("click", () => {
+  pounds = 20;
+  upgrade1 = false;
+  updateDisplay();
+  output.innerHTML = "Game reset! Good luck 🍀";
+});
+
+updateDisplay();
+</script>
+</body>
+</html>
